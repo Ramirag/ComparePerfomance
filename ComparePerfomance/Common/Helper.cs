@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace Common
 {
@@ -30,6 +32,16 @@ namespace Common
             memoryStream.Write(bytes, 0, bytes.Length);
             memoryStream.Flush();
             return memoryStream;
+        }
+
+        public static void HeatUp()
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var time = stopWatch.Elapsed;
+            Assert.True(time.Ticks > -1);
+            stopWatch.Stop();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
         public static void SaveLog(string testName, string log)

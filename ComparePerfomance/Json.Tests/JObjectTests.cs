@@ -13,12 +13,10 @@ namespace Json.Tests
 {
     public class JObjectTests
     {
-        public static readonly IEnumerable<object[]> ArgumentsForReading = new List<object[]>
+        public static readonly IEnumerable<object[]> ArgumentsForForPossibleCaching = new List<object[]>
         {
             new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000},
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000},
-            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000},
-            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property128), 5, 1_000_000}
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000}
         };
 
         public static readonly IEnumerable<object[]> ArgumentsForValidationOnNull = new List<object[]>
@@ -35,12 +33,12 @@ namespace Json.Tests
             _testOutput = testOutput;
         }
 
-        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject")]
-        [MemberData(nameof(ArgumentsForReading))]
-        public void TestPerfomanceOnMultipleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
+        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject. But it possible can be. Better to read source.")]
+        [MemberData(nameof(ArgumentsForForPossibleCaching))]
+        public void TestPerfomanceForPossibleCachingOnMultipleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
         {
             var jObjects = Enumerable.Range(0, objectsCount).Select(j => CreateJObjectForDto(type)).ToArray();
-            HeatUpForReading(jObjects, parameterName);
+            HeatUpForPossibleCaching(jObjects, parameterName);
 
             var durations = new TimeSpan[repeatTimes];
             for (var i = 0; i < repeatTimes; i++)
@@ -63,18 +61,18 @@ namespace Json.Tests
             var diff = (double) (max.Ticks - min.Ticks) / min.Ticks * 100;
             var message = $"Test for {type} parameter {parameterName} repeted {repeatTimes} times, created {objectsCount} instances. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceOnMultipleReadingToJObject)}", message);
+            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceForPossibleCachingOnMultipleReadingToJObject)}", message);
         }
 
-        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject")]
-        [MemberData(nameof(ArgumentsForReading))]
-        public void TestPerfomanceOnSingleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
+        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject. But it possible can be. Better to read source.")]
+        [MemberData(nameof(ArgumentsForForPossibleCaching))]
+        public void TestPerfomanceForPossibleCachingOnSingleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
         {
             var durations = new TimeSpan[repeatTimes];
             for (var i = 0; i < repeatTimes; i++)
             {
                 var jObjects = Enumerable.Range(0, objectsCount).Select(j => CreateJObjectForDto(type)).ToArray();
-                HeatUp();
+                Helper.HeatUp();
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
                 foreach (var jObject in jObjects)
@@ -93,7 +91,40 @@ namespace Json.Tests
             var diff = (double) (max.Ticks - min.Ticks) / min.Ticks * 100;
             var message = $"Test for {type} parameter {parameterName} repeted {repeatTimes} times, created {objectsCount} instances. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceOnSingleReadingToJObject)}", message);
+            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceForPossibleCachingOnSingleReadingToJObject)}", message);
+        }
+
+        [Theory]
+        [MemberData(nameof(ArgumentsForValidationOnNull))]
+        public void TestPerfomanceOnReadingToJObject(Type type, string parameterName, int repeatTimes, TimeSpan duration)
+        {
+            var jObject = CreateJObjectForDto(type);
+            HeatUpForValidationOnNull(jObject, parameterName);
+
+            var counters = new int[repeatTimes];
+            for (var i = 0; i < repeatTimes; i++)
+            {
+                var counter = 0;
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+                while (stopWatch.Elapsed < duration)
+                {
+                    var value = jObject[parameterName].Value<string>();
+                    Assert.NotNull(value);
+                    counter++;
+                }
+
+                stopWatch.Stop();
+                counters[i] = counter;
+            }
+
+            var min = counters.Min();
+            var max = counters.Max();
+            var avg = counters.Average();
+            var diff = (double) (max - min) / min * 100;
+            var message = $"Test for {type} parameter {parameterName} repeted {repeatTimes} times, each took {duration}. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
+            _testOutput.WriteLine(message);
+            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceOnReadingToJObject)}", message);
         }
 
         [Theory]
@@ -182,32 +213,22 @@ namespace Json.Tests
             var json = JsonConvert.SerializeObject(instance);
             return JObject.Parse(json);
         }
-
-        private void HeatUp()
-        {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var time = stopWatch.Elapsed;
-            Assert.True(time.Ticks > -1);
-            stopWatch.Stop();
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
-        }
-
-        private void HeatUpForReading(IEnumerable<JObject> jObjects, string parameterName)
+        
+        private void HeatUpForPossibleCaching(IEnumerable<JObject> jObjects, string parameterName)
         {
             jObjects.All(jObject =>
             {
                 var value = jObject[parameterName].Value<string>();
                 return value != null;
             });
-            HeatUp();
+            Helper.HeatUp();
         }
 
         private void HeatUpForValidationOnNull(JObject jObject, string parameterName)
         {
             var value = jObject[parameterName].Value<string>();
             Assert.NotNull(value);
-            HeatUp();
+            Helper.HeatUp();
         }
     }
 }
