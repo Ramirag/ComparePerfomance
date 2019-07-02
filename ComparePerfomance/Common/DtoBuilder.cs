@@ -65,11 +65,11 @@ namespace Common
             var count = _random.Next(min, max);
             switch (propertyType.Name)
             {
-                case "Int32":
+                case "Int32[]":
                     var intList = new int[count];
                     FillList(intList, CreateInt);
                     return intList;
-                case "String":
+                case "String[]":
                     var stringList = new string[count];
                     FillList(stringList, CreateString);
                     return stringList;

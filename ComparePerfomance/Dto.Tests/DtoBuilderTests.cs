@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Dto.Tests
 {
-    public class UnitTest1
+    public class DtoBuilderTests
     {
         [Fact]
         public void Create_ClassWithArrays_InstanceFilled()
