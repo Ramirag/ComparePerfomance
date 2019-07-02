@@ -15,8 +15,8 @@ namespace Json.Tests
     {
         public static readonly IEnumerable<object[]> ArgumentsForReading = new List<object[]>
         {
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000_000},
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000_000}
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000},
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000}
         };
 
         public static readonly IEnumerable<object[]> ArgumentsForValidationOnNull = new List<object[]>
@@ -33,7 +33,7 @@ namespace Json.Tests
             _testOutput = testOutput;
         }
 
-        [Theory]
+        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject")]
         [MemberData(nameof(ArgumentsForReading))]
         public void TestPerfomanceOnMultipleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
         {
@@ -61,10 +61,10 @@ namespace Json.Tests
             var diff = (double) (max.Ticks - min.Ticks) / min.Ticks * 100;
             var message = $"Test for {type} parameter {parameterName} repeted {repeatTimes} times, created {objectsCount} instances. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceOnSingleReadingToJObject)}", message);
+            Helper.SaveLog($"{nameof(JObjectTests)}_{nameof(TestPerfomanceOnMultipleReadingToJObject)}", message);
         }
 
-        [Theory]
+        [Theory(Skip = "There is no difference in perfomance between TestPerfomanceOnMultipleReadingToJObject and TestPerfomanceOnSingleReadingToJObject")]
         [MemberData(nameof(ArgumentsForReading))]
         public void TestPerfomanceOnSingleReadingToJObject(Type type, string parameterName, int repeatTimes, int objectsCount)
         {
