@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,14 +10,15 @@ using Common.Dtos.Classes.Integers;
 using Common.Dtos.Classes.Lists;
 using Common.Dtos.Classes.Strings;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Dto.Tests
+namespace Json.Tests
 {
-    public class ReadDtoFromMemoryStream
+    public class ReadJObjectFromMemoryStreamThroughJObjectLoad
     {
-        public ReadDtoFromMemoryStream(ITestOutputHelper testOutput)
+        public ReadJObjectFromMemoryStreamThroughJObjectLoad(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
         }
@@ -91,7 +92,7 @@ namespace Dto.Tests
         {
             var memoryStream = Helper.CreateFilledMemoryStream(type);
 
-            HeatUp(memoryStream, type);
+            HeatUp(memoryStream);
 
             var counters = new int[repeatTimes];
             for (var i = 0; i < repeatTimes; i++)
@@ -101,7 +102,7 @@ namespace Dto.Tests
                 stopWatch.Start();
                 while (stopWatch.Elapsed < duration)
                 {
-                    var instance = ReadDto(memoryStream, type);
+                    var instance = ReadJObject(memoryStream);
                     Assert.NotNull(instance);
                     counter++;
                 }
@@ -116,14 +117,14 @@ namespace Dto.Tests
             var diff = (double) (max - min) / min * 100;
             var message = $"Test for {type} repeted {repeatTimes} times, each took {duration}. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(ReadDtoFromMemoryStream)}", message);
+            Helper.SaveLog($"{nameof(ReadJObjectFromMemoryStreamThroughJObjectLoad)}", message);
         }
 
         private readonly ITestOutputHelper _testOutput;
 
-        private void HeatUp(Stream memoryStream, Type type)
+        private void HeatUp(Stream memoryStream)
         {
-            var instance = ReadDto(memoryStream, type);
+            var instance = ReadJObject(memoryStream);
             Assert.NotNull(instance);
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -133,13 +134,12 @@ namespace Dto.Tests
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
         }
 
-        private object ReadDto(Stream memoryStream, Type type)
+        private JObject ReadJObject(Stream memoryStream)
         {
             memoryStream.Seek(0, SeekOrigin.Begin);
-            var bytes = new byte[memoryStream.Length];
-            memoryStream.Read(bytes, 0, bytes.Length);
-            var json = Encoding.UTF8.GetString(bytes);
-            var instance = JsonConvert.DeserializeObject(json, type);
+            var textReader = new StreamReader(memoryStream, Encoding.UTF8);
+            var jsonReader = new JsonTextReader(textReader);
+            var instance = JObject.Load(jsonReader);
             return instance;
         }
     }
