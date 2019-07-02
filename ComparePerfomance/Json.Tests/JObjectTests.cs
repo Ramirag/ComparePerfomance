@@ -16,7 +16,9 @@ namespace Json.Tests
         public static readonly IEnumerable<object[]> ArgumentsForReading = new List<object[]>
         {
             new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000},
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000}
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, 1_000_000},
+            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property1), 5, 1_000_000},
+            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property128), 5, 1_000_000}
         };
 
         public static readonly IEnumerable<object[]> ArgumentsForValidationOnNull = new List<object[]>
