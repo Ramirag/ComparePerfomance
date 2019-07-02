@@ -86,7 +86,7 @@ namespace Dto.Tests
         }
 
         [Theory]
-        [MemberData(nameof(Data))]
+        [ClassData(typeof(ArgumentsForTestingReadingAndWritingFromMemoryStream))]
         public void Test(Type type, int repeatTimes, TimeSpan duration)
         {
             var memoryStream = Helper.CreateFilledMemoryStream(type);
