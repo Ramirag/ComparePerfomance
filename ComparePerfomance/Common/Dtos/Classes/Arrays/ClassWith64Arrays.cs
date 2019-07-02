@@ -1,0 +1,70 @@
+﻿namespace Common.Dtos.Classes.Arrays
+{
+    public class ClassWith64Arrays<T>
+    {
+        public T[] Property1 { get; set; }
+        public T[] Property2 { get; set; }
+        public T[] Property3 { get; set; }
+        public T[] Property4 { get; set; }
+        public T[] Property5 { get; set; }
+        public T[] Property6 { get; set; }
+        public T[] Property7 { get; set; }
+        public T[] Property8 { get; set; }
+        public T[] Property9 { get; set; }
+        public T[] Property10 { get; set; }
+        public T[] Property11 { get; set; }
+        public T[] Property12 { get; set; }
+        public T[] Property13 { get; set; }
+        public T[] Property14 { get; set; }
+        public T[] Property15 { get; set; }
+        public T[] Property16 { get; set; }
+        public T[] Property17 { get; set; }
+        public T[] Property18 { get; set; }
+        public T[] Property19 { get; set; }
+        public T[] Property20 { get; set; }
+        public T[] Property21 { get; set; }
+        public T[] Property22 { get; set; }
+        public T[] Property23 { get; set; }
+        public T[] Property24 { get; set; }
+        public T[] Property25 { get; set; }
+        public T[] Property26 { get; set; }
+        public T[] Property27 { get; set; }
+        public T[] Property28 { get; set; }
+        public T[] Property29 { get; set; }
+        public T[] Property30 { get; set; }
+        public T[] Property31 { get; set; }
+        public T[] Property32 { get; set; }
+        public T[] Property33 { get; set; }
+        public T[] Property34 { get; set; }
+        public T[] Property35 { get; set; }
+        public T[] Property36 { get; set; }
+        public T[] Property37 { get; set; }
+        public T[] Property38 { get; set; }
+        public T[] Property39 { get; set; }
+        public T[] Property40 { get; set; }
+        public T[] Property41 { get; set; }
+        public T[] Property42 { get; set; }
+        public T[] Property43 { get; set; }
+        public T[] Property44 { get; set; }
+        public T[] Property45 { get; set; }
+        public T[] Property46 { get; set; }
+        public T[] Property47 { get; set; }
+        public T[] Property48 { get; set; }
+        public T[] Property49 { get; set; }
+        public T[] Property50 { get; set; }
+        public T[] Property51 { get; set; }
+        public T[] Property52 { get; set; }
+        public T[] Property53 { get; set; }
+        public T[] Property54 { get; set; }
+        public T[] Property55 { get; set; }
+        public T[] Property56 { get; set; }
+        public T[] Property57 { get; set; }
+        public T[] Property58 { get; set; }
+        public T[] Property59 { get; set; }
+        public T[] Property60 { get; set; }
+        public T[] Property61 { get; set; }
+        public T[] Property62 { get; set; }
+        public T[] Property63 { get; set; }
+        public T[] Property64 { get; set; }
+    }
+}
