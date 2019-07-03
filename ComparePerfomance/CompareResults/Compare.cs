@@ -71,6 +71,10 @@ namespace CompareResults
                 Avg = double.Parse(i[16]),
             });
 
+            var count = 0;
+            double minAvg = 0;
+            double maxAvg = 0;
+            double avgAvg = 0;
             foreach (var keyValuePair in firstFileDictionary)
             {
                 if (!secondFileDictionary.TryGetValue(keyValuePair.Key, out var secondFileDate))
@@ -82,9 +86,17 @@ namespace CompareResults
                 var max = CalculateDifference(keyValuePair.Value.Max, secondFileDate.Max);
                 var avg = CalculateDifference(keyValuePair.Value.Avg, secondFileDate.Avg);
 
-                Helper.SaveLog($"{nameof(Compare)}_ {nameof(ReadDtoFromMemoryStream)}_{nameof(ReadJObjectFromMemoryStream)}",
+                count++;
+                minAvg += min;
+                maxAvg += max;
+                avgAvg += avg;
+
+                Helper.SaveLog($"{nameof(Compare)}_{nameof(ReadDtoFromMemoryStream)}_{nameof(ReadJObjectFromMemoryStream)}",
                     $"{keyValuePair.Key} Min: {min} Max: {max} Avg:{avg}");
             }
+
+            Helper.SaveLog($"{nameof(Compare)}_{nameof(ReadDtoFromMemoryStream)}_{nameof(ReadJObjectFromMemoryStream)}",
+                $"Min: {minAvg / count} Max: {maxAvg / count} Avg:{avgAvg / count}");
         }
 
         [Fact]
@@ -110,6 +122,10 @@ namespace CompareResults
                 Avg = double.Parse(i[16]),
             });
 
+            var count = 0;
+            double minAvg = 0;
+            double maxAvg = 0;
+            double avgAvg = 0;
             foreach (var keyValuePair in firstFileDictionary)
             {
                 if (!secondFileDictionary.TryGetValue(keyValuePair.Key, out var secondFileDate))
@@ -121,9 +137,17 @@ namespace CompareResults
                 var max = CalculateDifference(keyValuePair.Value.Max, secondFileDate.Max);
                 var avg = CalculateDifference(keyValuePair.Value.Avg, secondFileDate.Avg);
 
-                Helper.SaveLog($"{nameof(Compare)}_ {nameof(WriteDtoToMemoryStream)}_{nameof(WriteJObjectToMemoryStream)}",
+                count++;
+                minAvg += min;
+                maxAvg += max;
+                avgAvg += avg;
+
+                Helper.SaveLog($"{nameof(Compare)}_{nameof(WriteDtoToMemoryStream)}_{nameof(WriteJObjectToMemoryStream)}",
                     $"{keyValuePair.Key} Min: {min} Max: {max} Avg:{avg}");
             }
+
+            Helper.SaveLog($"{nameof(Compare)}_{nameof(WriteDtoToMemoryStream)}_{nameof(WriteJObjectToMemoryStream)}",
+                $"Min: {minAvg / count} Max: {maxAvg / count} Avg:{avgAvg / count}");
         }
 
         [Fact]
@@ -152,6 +176,10 @@ namespace CompareResults
                     Avg = double.Parse(i[18]),
                 });
 
+            var count = 0;
+            double minAvg = 0;
+            double maxAvg = 0;
+            double avgAvg = 0;
             foreach (var keyValuePair in firstFileDictionary)
             {
                 if (!secondFileDictionary.TryGetValue(keyValuePair.Key, out var secondFileData))
@@ -163,9 +191,17 @@ namespace CompareResults
                 var max = CalculateDifference(keyValuePair.Value.Max, secondFileData.Max);
                 var avg = CalculateDifference(keyValuePair.Value.Avg, secondFileData.Avg);
 
-                Helper.SaveLog($"{nameof(Compare)}_ {nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithAditionalField)}_{nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithoutAditionalField)}",
+                count++;
+                minAvg += min;
+                maxAvg += max;
+                avgAvg += avg;
+
+                Helper.SaveLog($"{nameof(Compare)}_{nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithAditionalField)}_{nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithoutAditionalField)}",
                     $"{keyValuePair.Key.ClassName} Property: {keyValuePair.Key.PropertyName} Min: {min} Max: {max} Avg:{avg}");
             }
+
+            Helper.SaveLog($"{nameof(Compare)}_{nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithAditionalField)}_{nameof(JObjectTests.TestPerfomanceOnValidationTokenOnNullWithoutAditionalField)}",
+                $"Min: {minAvg / count} Max: {maxAvg / count} Avg:{avgAvg / count}");
         }
 
         [Fact]
@@ -193,15 +229,27 @@ namespace CompareResults
                     Avg = double.Parse(i[18]),
                 });
 
+            var count = 0;
+            double minAvg = 0;
+            double maxAvg = 0;
+            double avgAvg = 0;
             foreach (var keyValuePair in secondFileDictionary)
             {
                 var min = CalculateDifference(firstFileData.Min, keyValuePair.Value.Min);
                 var max = CalculateDifference(firstFileData.Max, keyValuePair.Value.Max);
                 var avg = CalculateDifference(firstFileData.Avg, keyValuePair.Value.Avg);
 
-                Helper.SaveLog($"{nameof(Compare)}_ {nameof(DtoTests.TestPerfomanceOnReadingToDto)}_{nameof(JObjectTests.TestPerfomanceOnReadingToJObject)}",
+                count++;
+                minAvg += min;
+                maxAvg += max;
+                avgAvg += avg;
+
+                Helper.SaveLog($"{nameof(Compare)}_{nameof(DtoTests.TestPerfomanceOnReadingToDto)}_{nameof(JObjectTests.TestPerfomanceOnReadingToJObject)}",
                     $"{keyValuePair.Key.ClassName} Property: {keyValuePair.Key.PropertyName} Min: {min} Max: {max} Avg:{avg}");
             }
+
+            Helper.SaveLog($"{nameof(Compare)}_{nameof(DtoTests.TestPerfomanceOnReadingToDto)}_{nameof(JObjectTests.TestPerfomanceOnReadingToJObject)}",
+                $"Min: {minAvg / count} Max: {maxAvg / count} Avg:{avgAvg / count}");
         }
     }
 }
