@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Common;
 using Common.Dtos.Classes.Integers;
+using Common.Dtos.Classes.Strings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -21,11 +22,22 @@ namespace Json.Tests
 
         public static readonly IEnumerable<object[]> ArgumentsForValidationOnNull = new List<object[]>
         {
-            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property1), 5, TimeSpan.FromSeconds(2)},
-            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property128), 5, TimeSpan.FromSeconds(2)},
-            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property256), 5, TimeSpan.FromSeconds(2)},
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, TimeSpan.FromSeconds(2)},
-            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, TimeSpan.FromSeconds(2)}
+            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property128), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith256Ints), nameof(ClassWith256Ints.Property256), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property64), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Ints), nameof(ClassWith256Ints.Property128), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith2Ints), nameof(ClassWith256Ints.Property2), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith256Strings), nameof(ClassWith256Strings.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith256Strings), nameof(ClassWith256Strings.Property128), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith256Strings), nameof(ClassWith256Strings.Property256), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Strings), nameof(ClassWith256Strings.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Strings), nameof(ClassWith256Strings.Property64), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith128Strings), nameof(ClassWith256Strings.Property128), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith2Strings), nameof(ClassWith256Strings.Property1), 5, TimeSpan.FromSeconds(1)},
+            new object[] {typeof(ClassWith2Strings), nameof(ClassWith256Strings.Property2), 5, TimeSpan.FromSeconds(1)},
         };
 
         public JObjectTests(ITestOutputHelper testOutput)

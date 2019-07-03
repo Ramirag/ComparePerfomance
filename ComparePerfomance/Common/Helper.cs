@@ -10,6 +10,8 @@ namespace Common
 {
     public static class Helper
     {
+        public const string Path = @"C:\PerfomaceTests\";
+
         public static MemoryStream CreateFilledMemoryStream<T>() where T : new()
         {
             var builder = new DtoBuilder();
@@ -46,24 +48,23 @@ namespace Common
 
         public static void SaveLog(string testName, string log)
         {
-            if (!_locks.TryGetValue(testName, out var lockObject))
+            if (!Locks.TryGetValue(testName, out var lockObject))
             {
                 lockObject = new object();
-                if (!_locks.TryAdd(testName, lockObject))
+                if (!Locks.TryAdd(testName, lockObject))
                 {
-                    lockObject = _locks[testName];
+                    lockObject = Locks[testName];
                 }
             }
 
             lock (lockObject)
             {
-                var filePath = Path.Combine(_path, testName + ".txt");
-                Directory.CreateDirectory(_path);
+                var filePath = System.IO.Path.Combine(Path, testName + ".txt");
+                Directory.CreateDirectory(Path);
                 File.AppendAllLines(filePath, new[] {log});
             }
         }
 
-        private const string _path = @"C:\PerfomaceTests\";
-        private static readonly ConcurrentDictionary<string, object> _locks = new ConcurrentDictionary<string, object>();
+        private static readonly ConcurrentDictionary<string, object> Locks = new ConcurrentDictionary<string, object>();
     }
 }
