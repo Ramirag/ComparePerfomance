@@ -171,7 +171,7 @@ namespace CompareResults
         [Fact]
         public void CompareTestPerfomanceOnReadingToDtoWithTestPerfomanceOnReadingToJObject()
         {
-            var firstFileName = $"{nameof(DtoTests)}_{nameof(JObjectTests.TestPerfomanceOnReadingToJObject)}" + ".txt";
+            var firstFileName = $"{nameof(DtoTests)}_{nameof(DtoTests.TestPerfomanceOnReadingToDto)}" + ".txt";
             var secondFileName = $"{nameof(JObjectTests)}_{nameof(JObjectTests.TestPerfomanceOnReadingToJObject)}" + ".txt";
 
             var firstFileLines = File.ReadAllLines(Path.Combine(Helper.Path, firstFileName));
