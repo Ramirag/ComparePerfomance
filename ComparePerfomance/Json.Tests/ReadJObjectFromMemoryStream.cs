@@ -11,9 +11,9 @@ using Xunit.Abstractions;
 
 namespace Json.Tests
 {
-    public class ReadJObjectFromMemoryStreamThroughJObjectLoad
+    public class ReadJObjectFromMemoryStream
     {
-        public ReadJObjectFromMemoryStreamThroughJObjectLoad(ITestOutputHelper testOutput)
+        public ReadJObjectFromMemoryStream(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
         }
@@ -49,7 +49,7 @@ namespace Json.Tests
             var diff = (double) (max - min) / min * 100;
             var message = $"Test for {type} repeted {repeatTimes} times, each took {duration}. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(ReadJObjectFromMemoryStreamThroughJObjectLoad)}", message);
+            Helper.SaveLog($"{nameof(ReadJObjectFromMemoryStream)}", message);
         }
 
         private readonly ITestOutputHelper _testOutput;
@@ -58,12 +58,7 @@ namespace Json.Tests
         {
             var instance = ReadJObject(memoryStream);
             Assert.NotNull(instance);
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var time = stopWatch.Elapsed;
-            Assert.True(time.Ticks > -1);
-            stopWatch.Stop();
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+            Helper.HeatUp();
         }
 
         private JObject ReadJObject(Stream memoryStream)

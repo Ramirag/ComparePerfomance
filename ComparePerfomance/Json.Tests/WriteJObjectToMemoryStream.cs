@@ -1,30 +1,33 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Common;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Json.Tests
 {
-    public class ReadJObjectFromMemoryStreamThroughJObjectParse
-
+    public class WriteJObjectToMemoryStream
     {
-        public ReadJObjectFromMemoryStreamThroughJObjectParse(ITestOutputHelper testOutput)
+        public WriteJObjectToMemoryStream(ITestOutputHelper testOutput)
         {
             _testOutput = testOutput;
         }
 
-        [Theory(Skip= "There is no difference with ReadJObjectFromMemoryStream")]
+        [Theory]
         [ClassData(typeof(ArgumentsForTestingReadingAndWritingFromMemoryStream))]
         public void Test(Type type, int repeatTimes, TimeSpan duration)
         {
-            var memoryStream = Helper.CreateFilledMemoryStream(type);
+            var builder = new DtoBuilder();
+            var ins = builder.Create(type);
+            var json = JsonConvert.SerializeObject(ins, Formatting.None);
+            var jObject = JObject.Parse(json);
 
-            HeatUp(memoryStream);
+            HeatUp(jObject);
 
             var counters = new int[repeatTimes];
             for (var i = 0; i < repeatTimes; i++)
@@ -34,8 +37,8 @@ namespace Json.Tests
                 stopWatch.Start();
                 while (stopWatch.Elapsed < duration)
                 {
-                    var instance = ReadJObject(memoryStream);
-                    Assert.NotNull(instance);
+                    var memoryStream = WriteJObject(jObject);
+                    Assert.True(memoryStream.Length > 0);
                     counter++;
                 }
 
@@ -49,26 +52,26 @@ namespace Json.Tests
             var diff = (double) (max - min) / min * 100;
             var message = $"Test for {type} repeted {repeatTimes} times, each took {duration}. Min: {min} Max: {max} Diff: {diff} Avg: {avg}";
             _testOutput.WriteLine(message);
-            Helper.SaveLog($"{nameof(ReadJObjectFromMemoryStreamThroughJObjectParse)}", message);
+            Helper.SaveLog($"{nameof(WriteJObjectToMemoryStream)}", message);
         }
 
         private readonly ITestOutputHelper _testOutput;
 
-        private void HeatUp(Stream memoryStream)
+        private void HeatUp(JObject jObject)
         {
-            var instance = ReadJObject(memoryStream);
-            Assert.NotNull(instance);
+            var memoryStream = WriteJObject(jObject);
+            Assert.NotNull(memoryStream);
             Helper.HeatUp();
         }
 
-        private JObject ReadJObject(Stream memoryStream)
+        private MemoryStream WriteJObject(JObject jObject)
         {
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            var bytes = new byte[memoryStream.Length];
-            memoryStream.Read(bytes, 0, bytes.Length);
-            var json = Encoding.UTF8.GetString(bytes);
-            var instance = JObject.Parse(json);
-            return instance;
+            var memoryStream = new MemoryStream();
+            var textWriter = new StreamWriter(memoryStream, Encoding.UTF8);
+            var jsonWriter = new JsonTextWriter(textWriter);
+            jObject.WriteTo(jsonWriter);
+            memoryStream.Flush();
+            return memoryStream;
         }
     }
 }

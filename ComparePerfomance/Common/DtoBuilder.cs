@@ -60,9 +60,7 @@ namespace Common
 
         private object CreateArray(Type propertyType)
         {
-            const int min = 16;
-            const int max = 32;
-            var count = _random.Next(min, max);
+            const int count = 32;
             switch (propertyType.Name)
             {
                 case "Int32[]":
@@ -85,9 +83,7 @@ namespace Common
 
         private object CreateList(Type propertyType)
         {
-            const int min = 16;
-            const int max = 32;
-            var count = _random.Next(min, max);
+            const int count = 32;
             var genericType = propertyType.GenericTypeArguments[0];
             switch (genericType.Name)
             {
@@ -106,9 +102,7 @@ namespace Common
 
         private string CreateString()
         {
-            const int min = 16;
-            const int max = 32;
-            var length = _random.Next(min, max);
+            const int length = 32;
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[_random.Next(s.Length)]).ToArray());
