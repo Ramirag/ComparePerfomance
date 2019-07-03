@@ -70,6 +70,8 @@ namespace Json.Tests
             var textWriter = new StreamWriter(memoryStream, Encoding.UTF8);
             var jsonWriter = new JsonTextWriter(textWriter);
             jObject.WriteTo(jsonWriter);
+            jsonWriter.Flush();
+            textWriter.Flush();
             memoryStream.Flush();
             return memoryStream;
         }
